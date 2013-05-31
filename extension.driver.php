@@ -69,6 +69,7 @@
 				{
 					// Page has the 'pdf-attachment' type set, so lets generate some attachments
 					$this->generatePDFAttachments($context['output']);
+					
 				}
 			}
 		}
@@ -78,81 +79,86 @@
 				$check = file_exists($file);
 				if($check === true)
 				{
-						include($file);
-						
-						var_dump($preferences);	
-						//$preferences['style']['path'] = $output;
-						//$preferences
+						Symphony::Configuration()->flush();
+						if(isset($_POST['template-css']))
+						{			
+								
+								Symphony::Configuration()->set("path",$_POST['template-css'],"style");
+								Symphony::Configuration()->write($file,'755');
+						}
+						if(isset($_POST['template-file']))
+						{
+								Symphony::Configuration()->set("path",$_POST['template-file'],"template");
+								Symphony::Configuration()->write($file,'755');
+						}
 				}	
 		}
 		public function generatePDF($output) 
 		{
-			// generatePDF($output,$csspath)
-			// possibilities of tying in admin preferences to choose a css style sheet for pdf's
-			// by including the chosen path from the css sheet to this function 
 			require_once(EXTENSIONS . '/urltopdf/lib/MPDF56/mpdf.php');
 			$params = Frontend::Page()->_param;
 			$pdf=new mPDF();
 			$pdf->SetTitle('Invoice');
 			$file = MANIFEST.'/pdf.config.php';
-				$check = file_exists($file);
-				if($check === true)
-				{
-						include($file);
-						
-						//var_dump($preferences);
-						$path = $preferences['style']['path'];
-				}
-				else
-				{
-						$path = EXTENSIONS.'/urltopdf/assets/css/default.css';
-				}
-			//and outputting the css style sheet path in the following $stylesheet line
+			include($file);
+			$check = file_exists($file);
+			if($check === true)
+			{
+					if($settings['style']['path'] != ''){
+					$path = $settings['style']['path'];
+					}else
+					{
+					$path = $settings['style']['default'];
+					}
+			}
+			else
+			{
+					$path = EXTENSIONS.'/urltopdf/assets/css/default.css';
+			}
 			$stylesheet = file_get_contents($path);
 			$pdf->WriteHTML($stylesheet,1);
 			$pdf->WriteHTML($output);
 			$pdf->Output(sprintf('%s - %s', $params['website-name'], $params['page-title']), 'I');
+
 		}
 		public function generatePDFAttachments(&$output) 
 		{
 					require_once(EXTENSIONS . '/urltopdf/lib/MPDF56/mpdf.php');
 					$params = Frontend::Page()->_param;
+
 					$dom = new DOMDocument('1.0', 'UTF-8');
 					$doc->formatOutput = true;
+					
+					libxml_use_internal_errors(true);
 					$dom->loadHTML($output);
+					libxml_clear_errors();
+					
 					if($dom === false) return $output;
 					$xpath = new DOMXPath($dom);
-					// Copy any <link rel='stylesheet'/> or <style type='text/css'> prepend to the blocks
 					$css = '';
 					$styling = $xpath->query('//link[@rel="stylesheet"] | //style[@type="text/css"]');
 					if($styling->length !== 0) foreach($styling as $style) 
 					{
 						$css .= $dom->saveXML($style);
 					}
-					// Find anything with @data-utp attribute set to attachment
+					// access query string for switch between in browser pdf and force download pdf
 					$blocks = $xpath->query('//*[@data-utp = "attachment"]');
-					if($blocks->length !== 0) foreach($blocks as $block) {
-						// Get the content in those blocks
+					
+					if($blocks->length !== 0) foreach($blocks as $block) 
+					{
 						$data = $dom->saveXML($block);
-						// Send the block to the PDF generator, saving it in /TMP
 						$data = $css . $data;
-						$pdf=new mPDF();
-						// output the HTML content
-						$pdf->writeHTML($data, true, false, true, false, '');
-						// get the output of the PDF as a string and save it to a file
-						// attempt to find the filename if it's provided with @data-utp-filename
-						if(!$filename = $xpath->evaluate('string(//@data-utp-filename)')) {
-							 $filename = md5(sprintf('%s - %s', $params['website-name'], $params['page-title']));
-						}
-						$filename = TMP . '/' . Lang::createFilename($filename) . '.pdf';
-						General::writeFile($filename, $pdf->Output($filename, 'S'), Symphony::Configuration()->get('write_mode', 'file'));
-						// Replace the attachment node with <link rel='attachment' href='{path/to/file}' />
-						$link = $dom->createElement('link');
-						$link->setAttribute('rel', 'attachment');
-						$link->setAttribute('href', str_replace(DOCROOT, URL, $filename));
-						$block->parentNode->replaceChild($link, $block);
+						$pdf = new mPdf();
+						$html = $pdf->writeHTML($data);	
+						$filename1 = md5(sprintf('%s - %s', $params['website-name'], $params['page-title']));
 					}
-
-					$output = $dom->saveHTML();
+					if($_GET['download'] == '')
+					{
+						$pdf->Output($filename1, 'D');
+					}else
+					{
+						$pdf->Output($filename1, 'I');
+					}
 		}
+		
 	}

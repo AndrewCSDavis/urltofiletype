@@ -11,12 +11,21 @@
 
 		public function __viewIndex($context) 
 		{
-			
+						/*                                                                         */
+						
 					
-						$page = $this->Symphony.Context;
-						//var_dump($page);
-						$path = scandir(EXTENSIONS.'/urltopdf/assets/css');
-						array_shift($path);
+						
+						
+						
+						
+						/*                                                                         */
+						if(file_exists(WORKSPACE.'/assets/css/pdf'))
+						{
+							$path = scandir(WORKSPACE.'/assets/css/pdf');
+						}else
+						{
+							$path = scandir(EXTENSIONS.'/urltopdf/assets/css');
+						}
 						$arraydiffs = array('.','..');
 						$arrs = array_diff($path,$arraydiffs);
 						foreach($arrs as $dirs => $key)
@@ -26,12 +35,12 @@
 									if(array_count_values($v) > 1)
 									{
 											$a = implode('.',$v);
-											$imp[] = array(EXTENSIONS.'/urltopdf/assets/css/'.$key,'0',$a);
+											$imp[] = array(URL.'/workspace/assets/css/pdf/'.$key,'0',$a);
 									}
 									else
 									{
 											$a = implode($v);
-											$imp[] = array(EXTENSIONS.'/urltopdf/assets/css/'.$key,'0',$a);
+											$imp[] = array(URL.'/workspace/assets/css/pdf/'.$key,'0',$a);
 									}
 						}
 
@@ -42,28 +51,66 @@
 						$container->setAttribute('class', 'settings');
 						$group = new XMLElement('div');
 						$group->setAttribute('class', 'two columns');
-						$container->appendChild($group);
+						
+						
 						$check = file_exists(MANIFEST.'/pdf.config.php');
+						$check2 = file_exists(WORKSPACE.'/assets/css/pdf/default.css');
+						
 						if($check === false)
 						{
 							$alert = new XMLElement('div');
 							$alert->setValue('Message:');
 							$msg = new XMLElement('h3');
-							$msg->setValue('You must First create the pdf.config.php file in the manifest folder, at the moment the default.css has been selected');
+							$msgtext = 'You must First create the pdf.config.php file in the manifest folder, at the moment the default.css has been selected';
+							$msg->setValue($msgtext);
 							$alert->appendChild($msg);
 							$this->Form->appendChild($alert);
-						}		
-						$this->Form->appendChild($container);
-						$div = new XMLElement('div');
-						$div->setAttribute('class', 'actions');
-						$sellabel = new XMLElement('label');
-						$sellabel->setValue('PDF css file');
-						$sellabel->appendChild(Widget::Select('template-css',$imp));
-						$container->appendChild($sellabel);
-						$div->appendChild(Widget::Input('action[save]', __('Save Changes'), 'submit'));
-						$this->Form->appendChild($div);
+							
+						}else
+						{
+								if($check2 === true)
+								{
+										$settingslegend = new XMLElement('legend');
+										$settingslegend->setValue('Settings');
+										$container->appendChild($settingslegend);
+										$div = new XMLElement('div');
+										$div->setAttribute('class', 'actions');
+										$sellabel = new XMLElement('label');
+										$sellabel->setAttribute('class','column');
+										$sellabel->setValue('CSS file');
+										$sellabel->appendChild(Widget::Select('template-css',$imp));
+										$group->appendChild($sellabel);
+										$col2 = new XMLElement('div');
+										$col2->setAttribute('class','column');
+										$templabel = new XMLElement('label');
+										$templabel->setValue('Template File');
+										
+										// append template select options here
+										$templabel->appendChild(Widget::Select('template-file',$templateoptions));
+										$col2->appendChild($templabel);
+										$group->appendChild($col2);
+										$container->appendChild($group);
+										$this->Form->appendChild($container);
+										$div->appendChild(Widget::Input('action[save]', __('Save Changes'), 'submit'));
+										$this->Form->appendChild($div);
+										
+										
+								}
+								else
+								{
+										$alert = new XMLElement('div');
+										$alert->setValue('Message:');
+										$msg = new XMLElement('h3');
+										$msgtext = 'There are no CSS Sheets to choose from in directory location /workspace/assets/css/pdf/';
+										$msg->setValue($msgtext);
+										$alert->appendChild($msg);
+										$this->Form->appendChild($alert);
+								}
 						
-			
+						}
+						
+						
+						
 		}
 
 	
