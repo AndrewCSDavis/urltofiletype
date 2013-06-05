@@ -57,8 +57,8 @@
 		 
 		public function generateTYPEfromURL(array &$context = null) {
 			$page_data = Frontend::Page()->pageData();
-			if(EXTENSIONS.'/urltopdf/lib/MPDF56/tmp' == false){
-			$director_created = mkdir(EXTENSIONS.'/urltopdf/lib/MPDF56/tmp');
+			if(EXTENSIONS.'/urltofiletype/lib/MPDF56/tmp' == false){
+			$director_created = mkdir(EXTENSIONS.'/urltofiletype/lib/MPDF56/tmp');
 			}
 			if(!isset($page_data['type']) || !is_array($page_data['type']) || empty($page_data['type'])) return;
 
@@ -75,7 +75,7 @@
 		}
 		public function generatePDF($output) 
 		{
-			require_once(EXTENSIONS . '/urltopdf/lib/MPDF56/mpdf.php');
+			require_once(EXTENSIONS . '/urltofiletype/lib/MPDF56/mpdf.php');
 			$params = Frontend::Page()->_param;
 			$pdf=new mPDF();
 			$pdf->SetTitle('Invoice');
@@ -90,12 +90,12 @@
 							$path = $settings['style']['path'];
 					}else
 					{
-							$path = EXTENSIONS.'/urltopdf/assets/css/default.css';
+							$path = EXTENSIONS.'/urltofiletype/assets/css/default.css';
 					}			
 			}
 			else
 			{
-					$path = EXTENSIONS.'/urltopdf/assets/css/default.css';
+					$path = EXTENSIONS.'/urltofiletype/assets/css/default.css';
 			}
 			
 			$stylesheet = file_get_contents($path);
@@ -105,6 +105,8 @@
 			header("Content-Disposition: inline");
 			$pdf->Output($params['website-name'].'_'.$params['page-title'], $m);
 		}
+		
+		
 		public function postedPreferences( $page , array &$context = null)
 		{
 				$file = MANIFEST.'/pdf.config.php';

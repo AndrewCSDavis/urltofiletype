@@ -24,7 +24,7 @@
 							$path = scandir(WORKSPACE.'/assets/css/pdf');
 						}else
 						{
-							$path = scandir(EXTENSIONS.'/urltopdf/assets/css');
+							$path = scandir(EXTENSIONS.'/urltofiletype/assets/css');
 						}
 						$arraydiffs = array('.','..');
 						$arrs = array_diff($path,$arraydiffs);
@@ -75,6 +75,12 @@
 										$container->appendChild($settingslegend);
 										$div = new XMLElement('div');
 										$div->setAttribute('class', 'actions');
+										$documentationlbl = new XMLElement('label');
+										$documentationlbl->setValue('<strong>DOCUMENTATION:</strong><br/>');
+										$documentation = new XMLElement('code');
+										$text = 'In Order to Use the Extension Correctly append the page type as download and add a URL GET Param as  in example "http://current-url/?display=pdf" or  "http://current-url/?display=doc"these are to view it as a format. to create a link for the user to download a file it must be in this format "http://current-url/?display=doc&download=docx" , "http://current-url/?display=pdf&download=pdf" ';
+										$documentation->setValue($text);
+										$documentationlbl->appendChild($documentation);
 										$sellabel = new XMLElement('label');
 										$sellabel->setAttribute('class','column');
 										$sellabel->setValue('CSS file');
@@ -90,8 +96,10 @@
 										$col2->appendChild($templabel);
 										$group->appendChild($col2);
 										$container->appendChild($group);
+										$container->appendChild($documentationlbl);
 										$this->Form->appendChild($container);
 										$div->appendChild(Widget::Input('action[save]', __('Save Changes'), 'submit'));
+										//$this->Form->appendChild($documentationlbl);
 										$this->Form->appendChild($div);
 										
 										
