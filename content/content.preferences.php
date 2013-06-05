@@ -101,7 +101,8 @@
 										$alert = new XMLElement('div');
 										$alert->setValue('Message:');
 										$msg = new XMLElement('h3');
-										$msgtext = 'There are no CSS Sheets to choose from in directory location /workspace/assets/css/pdf/';
+										$msgtext = 'There are no CSS Sheets to choose from in directory location /workspace/assets/css/pdf/ <br/>';
+										$msgtext .=' You must also create a default.css';
 										$msg->setValue($msgtext);
 										$alert->appendChild($msg);
 										$this->Form->appendChild($alert);
