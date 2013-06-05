@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension id="urltopdf" status="experimental" xmlns="http://symphony-cms.com/schemas/extension/1.0">
-	<name>URL to PDF</name>
-	<description>Generate a PDF from your Symphony page</description>
-	<repo type="github">https://github.com/brendo/urltopdf</repo>
-	<url type="discuss">http://symphony-cms.com/discuss/thread/73527/</url>
+<extension id="urltofiletype" status="experimental" xmlns="http://symphony-cms.com/schemas/extension/1.0">
+	<name>URL to File Type</name>
+	<description>Generate a File from your Symphony page</description>
+	<repo type="github">https://adavis123@bitbucket.org/adavis123/urltopdf.git</repo>
+	<url type="discuss"></url>
 	<types>
 		<type>Multimedia</type>
 	</types>
 	<authors>
 		<author>
-			<name github="brendo" symphony="brendo">Brendan Abbott</name>
-			<website>http://www.bloodbone.ws</website>
+			<name github="andrew" symphony="andrew">Andrew Davis</name>
 		</author>
 	</authors>
 	<releases>

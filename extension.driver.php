@@ -1,17 +1,17 @@
 <?php
 
-	Class Extension_URLtoPDF extends Extension {
+	Class Extension_URLtoFileType extends Extension {
 
 		public function about() {
 			return array(
-				'name' => 'URL to PDF',
+				'name' => 'URL to File Type',
 				'version' => '0.1',
 				'release-date' => '2011-07-13',
 				'author' => array(
 					'name' => 'Andrew Davis',
 					'email' => 'tudor50rise@hotmail.co.uk'
 				),
-				'description' => 'Uses the MPDF library to take your HTML page and output it as a PDF'
+				'description' => 'Uses the MPDF library to take your HTML page and output it as a single File'
 			);
 		}
 		
@@ -42,7 +42,7 @@
 			return array(
 				array(
 					'location'	=> __('Blueprints'),
-					'name'		=> __('URL to PDF'),
+					'name'		=> __('URL to File'),
 					'link'		=> '/preferences/'
 				)
 			);

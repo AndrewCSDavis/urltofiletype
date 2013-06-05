@@ -5,7 +5,7 @@
 	require_once(TOOLKIT . '/class.eventmanager.php');
 	require_once(TOOLKIT . '/class.pagemanager.php');
 
-	class contentExtensionURLtoPDFPreferences extends AdministrationPage 
+	class contentExtensionURLtoFileTypePreferences extends AdministrationPage 
 	{
 		protected $driver;
 
@@ -46,7 +46,7 @@
 
 						$this->setPageType('form');
 						$form = new XMLElement('form');
-						$this->appendSubheading(__('URL to PDF')); 
+						$this->appendSubheading(__('URL to File Type')); 
 						$container = new XMLElement('fieldset');
 						$container->setAttribute('class', 'settings');
 						$group = new XMLElement('div');
