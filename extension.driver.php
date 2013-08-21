@@ -101,9 +101,18 @@
 			$stylesheet = file_get_contents($path);
 			$pdf->WriteHTML($stylesheet,1);
 			$pdf->WriteHTML($output);
-			$_GET['download'] == 'pdf' ?	$m = 'D': $m = 'I';
+			if($_GET['download'] == 'pdf')
+			{
+				$m = 'D';
+				$name = md5(mktime.'_'.$params['website-name'].'_'.$params['page-title']);
+			}
+			else
+			{
+				$m = 'I';
+				$name =  $params['website-name'].'_'.$params['page-title'];
+			}
 			header("Content-Disposition: inline");
-			$pdf->Output($params['website-name'].'_'.$params['page-title'], $m);
+			$pdf->Output($name, $m);
 		}
 		
 		
@@ -190,7 +199,7 @@
 
 				// Download the file:
 				
-				if($_GET['download'] == 'docx')
+				if($_GET['download'] == 'doc')
 				{
 					header('Content-Description: File Transfer');
 					header('Content-Type: application/octet-stream');
